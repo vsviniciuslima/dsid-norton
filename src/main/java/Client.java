@@ -10,7 +10,7 @@ public class Client {
 
     public static Registry registry;
     public static IPartRepository currentStub;
-    public static Part currentPart;
+    public static IPart currentPart;
 
     
     public static void main(String[] args) {
@@ -18,13 +18,24 @@ public class Client {
             instantiateRegistryAndMakeFirstBind();
             Scanner stdin = new Scanner(System.in);
 
-            currentStub.printMsg();
             System.out.println("The current server name is " + currentStub.getCurrentServerName());
+            currentStub.printMsg();
+
+            System.out.print("Choose an option to interact with the server: \n" +
+                    "1. Change repository \n" +
+                    "2. ");
+
+
+            while (!stdin.next().equals("quit")) {
+                System.out.println("oi");
+            }
 
             System.out.println("Enter the new server name");
 
             switchServer(stdin.next());
             currentStub.printMsg();
+
+
 
         } catch (Exception e) {
             e.printStackTrace();

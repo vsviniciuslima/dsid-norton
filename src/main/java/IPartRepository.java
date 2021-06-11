@@ -13,6 +13,6 @@ public interface IPartRepository extends Remote {
     public Integer getQuantityOfPartsInCurrentRepository() throws RemoteException;
     public ArrayList<IPart> getCurrentRepositoryParts() throws RemoteException;
     public Optional<IPart> findPartById(Long id) throws RemoteException;
-    public Boolean addNewPartToRepository(Long quantity, IPart part) throws RemoteException;
+    public Boolean addNewPartToRepository(IPart part) throws RemoteException;
 
 }

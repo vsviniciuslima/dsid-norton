@@ -6,39 +6,27 @@ public class Part implements IPart {
     public String name;
     public String description;
     public String repository;
-    public LinkedHashMap<Long, IPart> subParts = new LinkedHashMap<Long, IPart>();
+    public LinkedHashMap<Long, Part> subParts = new LinkedHashMap<>();
 
-    @Override
     public Long getId() {
         return id;
     }
-
-    @Override
     public String getName() {
         return name;
     }
-
-    @Override
     public String getDescription() {
         return description;
     }
-
     public String getRepository() {
         return repository;
     }
-
-    @Override
-    public LinkedHashMap<Long, IPart> getSubParts() {
+    public LinkedHashMap<Long, Part> getSubParts() {
         return subParts;
     }
-
-    @Override
-    public boolean clearSubParts() {
+    public void clearSubParts() {
         this.subParts.clear();
     }
-
-    @Override
-    public boolean addSubParts(Long quantity, IPart part) {
-        return this.subParts.put(quantity, part);
+    public void addSubParts(Long quantity, Part part) {
+        this.subParts.put(quantity, part);
     }
 }

@@ -1,4 +1,5 @@
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 public interface IPart {
 
@@ -6,7 +7,7 @@ public interface IPart {
     public String getName();
     public String getDescription();
     public String getRepository();
-    public LinkedHashMap<Long, IPart> getSubParts();
-    public boolean clearSubParts();
-    public boolean addSubParts(IPart part);
+    public Map<Long, Part> getSubParts();
+    public void clearSubParts();
+    public void addSubParts(Long quantity, Part part);
 }

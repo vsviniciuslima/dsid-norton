@@ -5,7 +5,7 @@ import java.util.Optional;
 public abstract class PartRepository implements IPartRepository {
 
     String currentServerName;
-    ArrayList<IPart> parts = new ArrayList<>();
+    ArrayList<Part> parts = new ArrayList<>();
 
     public PartRepository(String currentServerName) {
         this.currentServerName = currentServerName;

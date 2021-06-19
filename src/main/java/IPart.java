@@ -1,9 +1,10 @@
+import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 public interface IPart {
 
-    public Long getId();
+    public int getId();
     public String getName();
     public String getDescription();
     public String getRepository();

@@ -11,8 +11,8 @@ public interface IPartRepository extends Remote {
     public void printMsg() throws RemoteException;
     public String getCurrentServerName() throws RemoteException;
     public Integer getQuantityOfPartsInCurrentRepository() throws RemoteException;
-    public ArrayList<IPart> getCurrentRepositoryParts() throws RemoteException;
-    public Optional<IPart> findPartById(Long id) throws RemoteException;
-    public Boolean addNewPartToRepository(IPart part) throws RemoteException;
-
+    public ArrayList<Part> getCurrentRepositoryParts() throws RemoteException;
+    public Part findPartById(int id) throws RemoteException;
+    public Boolean addNewPartToRepository(Part part) throws RemoteException;
+    public void rename(int id, String name) throws RemoteException;
 }

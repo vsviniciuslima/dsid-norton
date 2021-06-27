@@ -1,14 +1,13 @@
-import java.io.Serializable;
-import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 
 public interface IPart {
 
-    public int getId();
-    public String getName();
-    public String getDescription();
-    public String getRepository();
-    public Map<Long, Part> getSubParts();
-    public void clearSubParts();
-    public void addSubParts(Long quantity, Part part);
+    Long getId();
+    String getName();
+    String getDescription();
+    String getRepository();
+    Set<Long[]> getSubParts();
+    void clearSubParts();
+    void addSubParts(Long quantity, Long partId);
 }

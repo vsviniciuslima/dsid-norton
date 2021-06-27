@@ -1,34 +1,24 @@
 import java.io.Serializable;
-import java.util.LinkedHashMap;
-import java.util.UUID;
+import java.util.*;
 
 public class Part implements IPart, Serializable {
 
-    public Part(String name, String description) {
-        this.name = name;
-        this.description = description;
-    }
+    private final Long id;
+    private String name;
+    private final String description;
+    private String repository;
+    private final Set<Long[]> subParts = new HashSet<>();
+    private boolean isOnAnotherRepository = false;
 
-    public Part(int id, String name, String description, String repository, LinkedHashMap<Long, Part> subParts) {
-        this.id = id;
+    public Part(String name, String description, String repository, String serverprefix) {
+        Long tempId = UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE;
+        this.id = Long.valueOf(serverprefix + tempId.toString().substring(0, 5));
         this.name = name;
         this.description = description;
         this.repository = repository;
-        this.subParts = subParts;
-        this.identifier = UUID.randomUUID().getMostSignificantBits();
     }
 
-    public Part() {}
-
-    public int id;
-    public String name;
-    public String description;
-    public String repository;
-    public LinkedHashMap<Long, Part> subParts = new LinkedHashMap<>();
-
-    public Long identifier;
-
-    public int getId() {
+    public Long getId() {
         return id;
     }
     public String getName() {
@@ -40,32 +30,32 @@ public class Part implements IPart, Serializable {
     public String getRepository() {
         return repository;
     }
-    public LinkedHashMap<Long, Part> getSubParts() {
+    public Set<Long[]> getSubParts() {
         return subParts;
     }
+    public boolean checkIfPartWasAddedToAnotherRepository() { return this.isOnAnotherRepository; }
+
+    public void setRepository(String repository) {
+        this.repository = repository;
+    }
+
     public void clearSubParts() {
         this.subParts.clear();
     }
-    public void addSubParts(Long quantity, Part part) {
-        this.subParts.put(quantity, part);
+    public void addSubParts(Long quantity, Long partId) {
+        this.subParts.add(new Long[]{quantity, partId});
     }
-
     public void setName(String name) {
         this.name = name;
     }
+    public void setPartIsOnAnotherRepository() { this.isOnAnotherRepository = true; }
 
+    public void printPartInfo() {
+        String partType = this.subParts.size() == 0 ? "primitiva" : "agregada";
 
-    @Override
-    public String toString() {
-        return "Part{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", repository='" + repository + '\'' +
-                ", subParts=" + subParts +
-                ", uuid=" + identifier +
-                '}';
+        System.out.println("Nome da peça: " + this.getName());
+        System.out.println("Descrição da peça: " + this.getDescription());
+        System.out.println("Tipo de peça: " + partType);
+        System.out.println("Subcomponentes: " + this.subParts.size());
     }
-
-
 }

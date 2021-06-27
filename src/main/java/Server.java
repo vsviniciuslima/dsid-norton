@@ -10,7 +10,7 @@ public class Server extends PartRepository {
             String serverId = serverLong.toString().substring(0,5);
             String serverName = args.length == 0 ? "server" + serverId : args[0] + serverId;
 
-            IPartRepository serverRepository = new PartRepository(serverName, serverId.toString().substring(0, 5));
+            IPartRepository serverRepository = new PartRepository(serverName, serverId.substring(0, 5));
             IPartRepository serverRepositoryStub = (IPartRepository) UnicastRemoteObject.exportObject(serverRepository, 0);
             LocateRegistry.getRegistry().rebind(serverName, serverRepositoryStub);
 

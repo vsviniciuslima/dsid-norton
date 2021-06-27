@@ -7,13 +7,11 @@ public class RunClient {
     public static void main(String[] args) throws NotBoundException, RemoteException {
 
         Scanner stdIn = new Scanner(System.in);
-
         RMIClient client = new RMIClient();
 
         client.startClient();
         client.printClientActions();
         System.out.print(">>> ");
-
 
         String action = stdIn.next();
         while (!action.equals("quit")) {
@@ -31,8 +29,6 @@ public class RunClient {
                 case "addsubpart": client.addSubPart();
                     break;
                 case "addp": client.addp();
-                    break;
-                case "rename": client.rename();
                     break;
                 case "help": client.printClientActions();
                     break;

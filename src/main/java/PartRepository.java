@@ -1,44 +1,53 @@
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Set;
+import java.util.UUID;
 
 public class PartRepository implements IPartRepository {
 
     String currentServerName;
+    String serverPrefix;
     ArrayList<Part> parts = new ArrayList<>();
 
-    public PartRepository(String name, String serverPrefix) {
-        this.currentServerName = name;
-        populateRepository(serverPrefix);
-    }
-
-    public PartRepository() { }
-
+    // Métodos relacionados ao servidor
     public String getCurrentServerName() {
         return currentServerName;
-    }
-
-    public Integer getQuantityOfPartsInCurrentRepository() throws RemoteException {
-        return parts.size();
     }
     public ArrayList<Part> getCurrentRepositoryParts() throws RemoteException {
         return this.parts;
     }
+    public Integer getQuantityOfPartsInCurrentRepository() throws RemoteException {
+        return parts.size();
+    }
+    public Long addNewPartToRepository(String name, String description, Set<SubpartContainer> subparts) throws RemoteException {
+        Long tempId = UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE;
+        Long id = Long.valueOf(this.serverPrefix + tempId.toString().substring(0, 5));
+        this.parts.add(new Part(name, description, currentServerName, serverPrefix, subparts));
+        return id;
+    }
+
+    // Métodos relacionados às partes
     public Part findPartById(Long id) throws RemoteException {
         return parts.stream().filter(part -> part.getId().equals(id)).findFirst().get();
     }
-    public void addNewPartToRepository(Part part) throws RemoteException {
-        part.setPartIsOnAnotherRepository();
-        this.parts.add(part);
+    public void addSubParts(Long qtd, Part part) throws RemoteException {
+        parts.stream().filter(serverPart -> part.getId().equals(serverPart.getId())).findFirst().get().addSubParts(qtd, part);
+    }
+    public void clearSubParts(Part part) {
+        parts.stream().filter(serverPart -> part.getId().equals(serverPart.getId())).findFirst().get().clearSubParts();
     }
 
-    public void rename(int id, String name) throws RemoteException {
-        this.parts.get(id).setName(name);
+    // Construtores e métodos auxiliares
+    public PartRepository(String name, String serverPrefix) {
+        this.currentServerName = name;
+        this.serverPrefix = serverPrefix;
+        populateRepository(serverPrefix);
     }
-
+    public PartRepository() { }
     private void populateRepository(String serverPrefix) {
         parts.add(new Part("Velas de ignição", "Conduzem a corrente elétrica do transformador até a câmara de combustão. Dessa maneira, inflama a mistura de ar e combustível, gerando uma alta tensão", currentServerName, serverPrefix));
         parts.add(new Part("Filtro de óleo", "O filtro de óleo tem a função de eliminar resíduos e sujeiras no sistema de lubrificação que possam atingir o motor.", currentServerName, serverPrefix));
-        parts.add(new Part("Pistão", "A função do pistão é receber a explosão da mistura de ar e combustível, contribuindo com um deslocamento de gases, o que faz a peça passar a força expandida para frente, alimentando a potência do motor por meio da energia gerada pela combustão", currentServerName, serverPrefix));
+        /*parts.add(new Part("Pistão", "A função do pistão é receber a explosão da mistura de ar e combustível, contribuindo com um deslocamento de gases, o que faz a peça passar a força expandida para frente, alimentando a potência do motor por meio da energia gerada pela combustão", currentServerName, serverPrefix));
         parts.add(new Part("Caixa de câmbio", "A caixa de câmbio é um multiplicador de velocidade e pode ser manual ou automática. Trata-se de toda a engrenagem que completa o sistema de marcha do seu carro, funcionando segundo as escalas de velocidade do motor ou multiplicação do torque.", currentServerName, serverPrefix));
         parts.add(new Part("Suspensão", "Responsável pelo sistema de estabilidade do veículo, a suspensão absorve todos os impactos do solo, como desníveis, buracos ou objetos que estejam na pista. Situada nas rodas, é uma peça do carro que expressa possíveis problemas por meio de ruídos.", currentServerName, serverPrefix));
         parts.add(new Part("Bomba de combustível", "A bomba de combustível pode ser definida como um equipamento de importância fundamental para o bom funcionamento do veículo porque leva o combustível até o motor.", currentServerName, serverPrefix));
@@ -57,6 +66,6 @@ public class PartRepository implements IPartRepository {
         parts.add(new Part("Roda", "Ponto de contato entre o veículo e o solo, ele é formado por diversos componentes, que vão diferir de acordo com a superfície.", currentServerName, serverPrefix));
         parts.add(new Part("Pneu", "parte externa da roda que entra em contato com o solo", currentServerName, serverPrefix));
         parts.add(new Part("Calota", "peça côncavo-convexa que se prende à parte central externa das rodas dos automóveis.", currentServerName, serverPrefix));
-        parts.add(new Part("Câmara", " responsável por inflar os pneus.", currentServerName, serverPrefix));
+        parts.add(new Part("Câmara", " responsável por inflar os pneus.", currentServerName, serverPrefix));*/
     }
 }

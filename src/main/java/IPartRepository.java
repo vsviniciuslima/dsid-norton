@@ -1,16 +1,18 @@
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Set;
 
-/*
-* the remote interface provides the description of all the methods of a particular object.
-* the client communicates with this remote interface
-* */
 public interface IPartRepository extends Remote {
+
+    // Métodos relacionados ao servidor
     String getCurrentServerName() throws RemoteException;
-    Integer getQuantityOfPartsInCurrentRepository() throws RemoteException;
     ArrayList<Part> getCurrentRepositoryParts() throws RemoteException;
+    Integer getQuantityOfPartsInCurrentRepository() throws RemoteException;
+    Long addNewPartToRepository(String name, String description, Set<SubpartContainer> subparts) throws RemoteException;
+
+    // Métodos relacionados às partes
     Part findPartById(Long id) throws RemoteException;
-    void addNewPartToRepository(Part part) throws RemoteException;
-    void rename(int id, String name) throws RemoteException;
+    void addSubParts(Long qtd, Part part) throws RemoteException;
+    void clearSubParts(Part part) throws RemoteException;
 }

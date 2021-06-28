@@ -1,3 +1,7 @@
+package model;
+
+import model.Part;
+
 import java.io.Serializable;
 
 public class SubpartContainer implements Serializable {

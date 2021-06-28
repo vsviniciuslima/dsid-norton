@@ -1,3 +1,8 @@
+package repository;
+
+import model.Part;
+import model.SubpartContainer;
+
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.ArrayList;

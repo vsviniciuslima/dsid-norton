@@ -1,3 +1,8 @@
+package server;
+
+import repository.IPartRepository;
+import repository.PartRepository;
+
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.UUID;
@@ -14,11 +19,11 @@ public class Server extends PartRepository {
             IPartRepository serverRepositoryStub = (IPartRepository) UnicastRemoteObject.exportObject(serverRepository, 0);
             LocateRegistry.getRegistry().rebind(serverName, serverRepositoryStub);
 
-            System.err.println("Server ready!");
-            System.err.println("Server name: " + serverName);
+            System.err.println("server.Server ready!");
+            System.err.println("server.Server name: " + serverName);
 
         } catch (Exception e) {
-            System.err.println("Server exception: " + e.toString());
+            System.err.println("server.Server exception: " + e.toString());
             e.printStackTrace();
         }
     }

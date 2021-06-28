@@ -1,3 +1,8 @@
+package client;
+
+import model.Part;
+import repository.IPartRepository;
+
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -16,6 +21,54 @@ public class RMIClient implements IClient {
     // Métodos Auxiliares
     public void newServerCreated(String serverName) throws RemoteException {
         this.availabLeServerNames.add(serverName);
+    }
+
+    // Métodos relacionados ao servidor
+    public void startClient() throws RemoteException, NotBoundException {
+        registry = LocateRegistry.getRegistry(null);
+        bind();
+    }
+    public void bind() throws RemoteException {
+        printAvailableServers();
+        decorateText("Insira o nome do servidor desejado");
+        System.out.print(">>> ");
+        try {
+            currentStub = (IPartRepository) registry.lookup(stdIn.next());
+            currentStub.getCurrentServerName();
+        } catch (Exception e) {
+            System.err.println("Servidor inválido ou não disponível. Por favor, escolha outro servidor.");
+        }
+    }
+    public void forceBind(String serverName) throws NotBoundException, RemoteException {
+        try {
+            currentStub = (IPartRepository) registry.lookup(serverName);
+        } catch (Exception e) {
+            bind();
+        }
+    }
+    public void switchToCurrentPartServer(Long id) throws RemoteException, NotBoundException {
+        String partId = id.toString().substring(0, 5);
+        if(!currentStub.getCurrentServerName().equals(getServerNameFromPartId(partId))) {
+            forceBind(getServerNameFromPartId(partId));
+        }
+    }
+    public String getServerNameFromPartId(String serverId) throws RemoteException {
+        getServerIds();
+        return this.serverIds.get(serverId);
+    }
+    public void getServerIds() throws RemoteException {
+        availabLeServerNames.clear();
+        availabLeServerNames.addAll(Arrays.asList(registry.list()));
+        availabLeServerNames.forEach(server -> {
+            this.serverIds.put(server.substring(server.length() - 5, server.length()), server);
+        });
+    }
+    public void printAvailableServers() throws RemoteException {
+        getServerIds();
+        decorateText("Os servidores disponíveis são:");
+        availabLeServerNames.clear();
+        availabLeServerNames.addAll(Arrays.asList(registry.list()));
+        availabLeServerNames.forEach(server -> System.out.println("* " + server));
     }
 
     // Métodos relacionados às partes
@@ -74,45 +127,6 @@ public class RMIClient implements IClient {
             currentStub.addNewPartToRepository(name, description, new HashSet<>());
             System.err.println("A lista de subparts atual está vazia. Logo, a parte foi criada sem sub-peças.");
         }
-    }
-
-    // Métodos relacionados ao servidor
-    public void startClient() throws RemoteException, NotBoundException {
-        registry = LocateRegistry.getRegistry(null);
-        bind();
-    }
-    public void bind() throws NotBoundException, RemoteException {
-        printAvailableServers();
-        decorateText("Insira o nome do servidor desejado");
-        System.out.print(">>> ");
-        currentStub = (IPartRepository) registry.lookup(stdIn.next());
-    }
-    public void forceBind(String serverName) throws NotBoundException, RemoteException {
-        currentStub = (IPartRepository) registry.lookup(serverName);
-    }
-    public void switchToCurrentPartServer(Long id) throws RemoteException, NotBoundException {
-        String partId = id.toString().substring(0, 5);
-        if(!currentStub.getCurrentServerName().equals(getServerNameFromPartId(partId))) {
-            forceBind(getServerNameFromPartId(partId));
-        }
-    }
-    public String getServerNameFromPartId(String serverId) throws RemoteException {
-        getServerIds();
-        return this.serverIds.get(serverId);
-    }
-    public void getServerIds() throws RemoteException {
-        availabLeServerNames.clear();
-        availabLeServerNames.addAll(Arrays.asList(registry.list()));
-        availabLeServerNames.forEach(server -> {
-            this.serverIds.put(server.substring(server.length() - 5, server.length()), server);
-        });
-    }
-    public void printAvailableServers() throws RemoteException {
-        getServerIds();
-        decorateText("Os servidores disponíveis são:");
-        availabLeServerNames.clear();
-        availabLeServerNames.addAll(Arrays.asList(registry.list()));
-        availabLeServerNames.forEach(server -> System.out.println("* " + server));
     }
 
     // Métodos relacionados ao CLI
